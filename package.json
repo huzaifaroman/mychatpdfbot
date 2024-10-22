@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "tailwindcss": "^3.4.14"
+  },
+  "dependencies": {
+    "firebase": "^10.14.1",
+    "nodemon": "^3.1.7"
+  }
+}

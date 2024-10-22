@@ -1,0 +1,4 @@
+new_venv/* filter=lfs diff=lfs merge=lfs -text
+new_venv/bin/* filter=lfs diff=lfs merge=lfs -text
+new_venv/**/*.whl filter=lfs diff=lfs merge=lfs -text
+new_venv/**/*.tar.gz filter=lfs diff=lfs merge=lfs -text
