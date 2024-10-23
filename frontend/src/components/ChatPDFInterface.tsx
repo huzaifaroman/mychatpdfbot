@@ -1,9 +1,9 @@
 
 "use client"; // Mark this component as a Client Component
 
-import React, { useState, ChangeEvent, FormEvent, DragEvent, useEffect } from 'react';
+import React, { useState, ChangeEvent, FormEvent, DragEvent } from 'react';
 
-import { ClipLoader } from 'react-spinners'; // Example using ClipLoader
+import Image from 'next/image';
 
 
 import '../app/globals.css'; // Ensure correct path for styles
@@ -13,18 +13,14 @@ interface ChatPDFInterfaceProps {
   }
 
 const ChatPDFInterface: React.FC<ChatPDFInterfaceProps> = ({ setShowChat }) =>  {
-    const [viewportWidth, setViewportWidth] = useState<number | null>(null);
     const [activeTab, setActiveTab] = useState<'chat' | 'pdf'>('chat');
     const [input, setInput] = useState<string>('');
     const [pdfFile, setPdfFile] = useState<File | null>(null);
     const [responses, setResponses] = useState<{ user: string; bot: string }[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
     const [pdfQuestion, setPdfQuestion] = useState<string>('');
-    const [pdfResponse, setPdfResponse] = useState<string>('');
     const [savedChats, setSavedChats] = useState<{ id: number; title: string; responses: { user: string; bot: string }[] }[]>([]);
     const [currentChatId, setCurrentChatId] = useState<number | null>(null);
-    const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(true);
     const [isPdfUploadVisible, setIsPdfUploadVisible] = useState<boolean>(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -33,14 +29,7 @@ const ChatPDFInterface: React.FC<ChatPDFInterfaceProps> = ({ setShowChat }) =>  
       };
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000';
   
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const handleResize = () => setViewportWidth(window.innerWidth);
-            handleResize();
-            window.addEventListener('resize', handleResize);
-            return () => window.removeEventListener('resize', handleResize);
-        }
-    }, []);
+    
   
 
     const handleTabChange = (tab: 'chat' | 'pdf') => {
@@ -59,8 +48,7 @@ const ChatPDFInterface: React.FC<ChatPDFInterfaceProps> = ({ setShowChat }) =>  
         setResponses([]);
         setPdfFile(null);
         setPdfQuestion('');
-        setPdfResponse('');
-        setError(null);
+        
     };
     
     const handleNewChat = (event: FormEvent) => {
@@ -116,7 +104,6 @@ const ChatPDFInterface: React.FC<ChatPDFInterfaceProps> = ({ setShowChat }) =>  
         // Step 2: Clear input and set loading state
         setInput('');
         setLoading(true);
-        setError(null);
     
         try {
             // Step 3: Fetch bot response
@@ -148,7 +135,6 @@ const ChatPDFInterface: React.FC<ChatPDFInterfaceProps> = ({ setShowChat }) =>  
             }
         } catch (error) {
             console.error('Error fetching response:', error);
-            setError('An error occurred while fetching the response');
         } finally {
             // Step 5: Reset loading state
             setLoading(false);
@@ -157,11 +143,9 @@ const ChatPDFInterface: React.FC<ChatPDFInterfaceProps> = ({ setShowChat }) =>  
     const handlePdfUpload = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!pdfFile) {
-            setError('Please select a PDF file.');
             return;
         }
         if (!pdfQuestion.trim()) {
-            setError('Please enter a question about the PDF.');
             return;
         }
     
@@ -172,7 +156,6 @@ const ChatPDFInterface: React.FC<ChatPDFInterfaceProps> = ({ setShowChat }) =>  
         // Step 2: Clear input and set loading state
         setPdfQuestion('');
         setLoading(true);
-        setError(null);
         
         const formData = new FormData();
         formData.append('file', pdfFile);
@@ -209,7 +192,6 @@ const ChatPDFInterface: React.FC<ChatPDFInterfaceProps> = ({ setShowChat }) =>  
             });
         } catch (error) {
             console.error('Error handling PDF:', error);
-            setError('An error occurred while handling the PDF');
         } finally {
             // Step 6: Reset loading state
             setLoading(false);
@@ -221,14 +203,12 @@ const ChatPDFInterface: React.FC<ChatPDFInterfaceProps> = ({ setShowChat }) =>  
         event.preventDefault();
         if (event.dataTransfer.files.length > 0) {
             setPdfFile(event.dataTransfer.files[0]);
-            setError(null);
         }
     };
 
     const handleFileClick = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
             setPdfFile(event.target.files[0]);
-            setError(null);
         }
     };
 
@@ -248,13 +228,21 @@ const ChatPDFInterface: React.FC<ChatPDFInterfaceProps> = ({ setShowChat }) =>  
     };
 
    // Function to download chat as a .txt file
-const downloadChat = async () => {
+   const downloadChat = async () => {
     const chatContent = responses.map(res => `User: ${res.user}\nBot: ${res.bot}`).join('\n\n');
 
     try {
-        // Prompt user to select a directory
-        const dirHandle = await window.showDirectoryPicker();
-        
+        let dirHandle;
+        // Check if window and showDirectoryPicker are available
+        if (typeof window !== "undefined" && 'showDirectoryPicker' in window) {
+            // Prompt the user to select a directory
+            dirHandle = await window.showDirectoryPicker();
+        } else {
+            console.error("showDirectoryPicker is not supported in this environment.");
+            // Optionally, provide alternative behavior here
+            return;
+        }
+
         // Create a new file in the selected directory
         const fileHandle = await dirHandle.getFileHandle('chat.txt', { create: true });
 
@@ -276,16 +264,16 @@ const downloadChat = async () => {
 
 
 
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw' }}>
         {/* Header */}
         <div style={{ width: '100%', padding: '16px', backgroundColor: 'black', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'fixed', top: 0, zIndex: 10 }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-                <img
-                    style={{ width: '70px', height: '50px' }}
-                    src="/logo.png" 
-                    alt="Logo"
-                />
+                
+                    <Image src="/logo.png" alt="Bot Logo" width={80} height={80} />
+
+                    
                 <h1 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', marginLeft: '8px' }}>Ask Audacity</h1>
                 
   <button
