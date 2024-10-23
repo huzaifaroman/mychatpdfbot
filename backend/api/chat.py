@@ -1,12 +1,16 @@
 # api/chat.py
-from flask import request, jsonify
-from models import handle_chat_query  # Ensure this import works in your new structure
+from flask import Flask, request, jsonify
+from models import handle_chat_query
 import logging
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 
-def handler(request):
+# Create a Flask app instance if this file is run independently
+app = Flask(__name__)
+
+@app.route('/api/chat', methods=['POST'])  # Define the route for chat handling
+def chat():
     """Endpoint to handle chat messages."""
     data = request.get_json()
     user_input = data.get('message')
@@ -28,3 +32,6 @@ def handler(request):
     else:
         logging.error("No input provided in chat request.")
         return jsonify({"error": "No input provided. Please send a message."}), 400
+
+if __name__ == '__main__':
+    app.run(debug=True)

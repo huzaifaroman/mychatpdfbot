@@ -1,12 +1,16 @@
 # api/pdf_query.py
-from flask import request, jsonify
-from models import process_pdf_query  # Make sure this import works in your new structure
+from flask import Flask, request, jsonify
+from models import process_pdf_query  # Ensure this import works in your new structure
 import logging
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 
-def handler(request):
+# Create a Flask app instance if this file is run independently
+app = Flask(__name__)
+
+@app.route('/api/pdf_query', methods=['POST'])  # Define the route for querying PDFs
+def query_pdf():
     """Endpoint to query the PDF content."""
     data = request.get_json()
     logging.debug(f"Received query data: {data}")
@@ -32,3 +36,6 @@ def handler(request):
     else:
         logging.error(f"Invalid input: question={question}, pdf_path={pdf_path}")
         return jsonify({"error": "Invalid input. Please provide both question and pdf_path."}), 400
+
+if __name__ == '__main__':
+    app.run(debug=True)

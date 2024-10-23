@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from models import process_pdf_query, handle_chat_query
+from mychatpdfbot.backend.models import process_pdf_query, handle_chat_query
 import os
 import logging
 
