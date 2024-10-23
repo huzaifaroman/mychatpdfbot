@@ -21,6 +21,7 @@
         }
     ],
     "env": {
-        "GEMINI_API_KEY": "AIzaSyCjU0KtzstK-lzlv2in6NLSK2dtvxSbfks" 
+        "GEMINI_API_KEY": "AIzaSyCjU0KtzstK-lzlv2in6NLSK2dtvxSbfks", 
+        "NEXT_PUBLIC_API_BASE_URL": "https://askaudacity-611blcdnu-huzaifas-projects-e4e9c0e0.vercel.app" 
     }
 }

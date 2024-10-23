@@ -27,7 +27,7 @@ const ChatPDFInterface: React.FC<ChatPDFInterfaceProps> = ({ setShowChat }) =>  
     const handleBack = () => {
         setShowChat(false); // Set showChat to false when going back
       };
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000';
+    // const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000';
   
     
   
@@ -106,8 +106,8 @@ const ChatPDFInterface: React.FC<ChatPDFInterfaceProps> = ({ setShowChat }) =>  
         setLoading(true);
     
         try {
-            // Step 3: Fetch bot response
-            const res = await fetch(`${API_BASE_URL}/api/chat`, {
+            // Step 3: Fetch bot response using the environment variable for the API URL
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: input }),
@@ -140,6 +140,7 @@ const ChatPDFInterface: React.FC<ChatPDFInterfaceProps> = ({ setShowChat }) =>  
             setLoading(false);
         }
     };
+    
     const handlePdfUpload = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!pdfFile) {
@@ -161,8 +162,8 @@ const ChatPDFInterface: React.FC<ChatPDFInterfaceProps> = ({ setShowChat }) =>  
         formData.append('file', pdfFile);
     
         try {
-            // Step 3: Upload PDF
-            const uploadRes = await fetch(`${API_BASE_URL}/api/upload-pdf`, {
+            // Step 3: Upload PDF using the environment variable for the API URL
+            const uploadRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/upload-pdf`, {
                 method: 'POST',
                 body: formData,
             });
@@ -172,8 +173,8 @@ const ChatPDFInterface: React.FC<ChatPDFInterfaceProps> = ({ setShowChat }) =>  
             const uploadData = await uploadRes.json();
             if (!uploadData.pdf_path) throw new Error('PDF upload failed. No path returned.');
     
-            // Step 4: Query the PDF
-            const queryRes = await fetch(`${API_BASE_URL}/api/pdf-query`, {
+            // Step 4: Query the PDF using the environment variable for the API URL
+            const queryRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/pdf-query`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ pdf_path: uploadData.pdf_path, message: pdfQuestion }),

@@ -1,20 +1,17 @@
-# api/upload_pdf.py
-from flask import Flask, request, jsonify
+from flask import request, jsonify, Blueprint
 from flask_cors import CORS
 import os
 import logging
 
-print("Backend is running!")
-
-app = Flask(__name__)
-CORS(app)
+# Create a Blueprint instance
+upload_pdf_app = Blueprint('upload_pdf', __name__)
 
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
 
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-@app.route('/api/upload_pdf', methods=['POST'])  # Define the route
+@upload_pdf_app.route('/api/upload_pdf', methods=['POST'])  # Define the route
 def upload_pdf():
     """Endpoint to upload a PDF file."""
     if 'file' not in request.files:
@@ -33,9 +30,6 @@ def upload_pdf():
 
     file.save(pdf_path)
 
-    app.logger.debug(f"Uploaded PDF saved at: {pdf_path}")
+    upload_pdf_app.logger.debug(f"Uploaded PDF saved at: {pdf_path}")
 
     return jsonify({'pdf_path': pdf_path, 'message': "Your PDF has been uploaded and processed."}), 200
-
-if __name__ == '__main__':
-    app.run(debug=True)

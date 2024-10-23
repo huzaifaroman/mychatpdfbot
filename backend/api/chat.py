@@ -1,15 +1,14 @@
-# api/chat.py
-from flask import Flask, request, jsonify
-from models import handle_chat_query
+from flask import request, jsonify, Blueprint
 import logging
+from models import handle_chat_query
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 
-# Create a Flask app instance if this file is run independently
-app = Flask(__name__)
+# Create a Blueprint instance
+chat_app = Blueprint('chat', __name__)
 
-@app.route('/api/chat', methods=['POST'])  # Define the route for chat handling
+@chat_app.route('/api/chat', methods=['POST'])  # Define the route for chat handling
 def chat():
     """Endpoint to handle chat messages."""
     data = request.get_json()
@@ -32,6 +31,3 @@ def chat():
     else:
         logging.error("No input provided in chat request.")
         return jsonify({"error": "No input provided. Please send a message."}), 400
-
-if __name__ == '__main__':
-    app.run(debug=True)
