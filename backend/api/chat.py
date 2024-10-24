@@ -1,7 +1,6 @@
 from flask import request, jsonify, Blueprint
 import logging
 from models import handle_chat_query
-
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 
@@ -31,3 +30,4 @@ def chat():
     else:
         logging.error("No input provided in chat request.")
         return jsonify({"error": "No input provided. Please send a message."}), 400
+

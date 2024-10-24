@@ -9,9 +9,6 @@ node_modules/
 venv/
 new_venv/
 
-# Ignore build artifacts
-.next/
-
 
 # .vercelignore
 venv/
