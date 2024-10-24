@@ -9,9 +9,11 @@ node_modules/
 venv/
 new_venv/
 
+# Ignore build artifacts
+.next/
 
 # .vercelignore
-venv/
-__pycache__/
 *.log
-*.pyc
+__pycache__
+node_modules
+frontend/.next

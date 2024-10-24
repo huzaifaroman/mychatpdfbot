@@ -4,6 +4,7 @@
   },
   "dependencies": {
     "firebase": "^10.14.1",
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "vercel": "^32.3.0"
   }
 }
