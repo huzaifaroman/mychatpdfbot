@@ -11,9 +11,9 @@ app = Flask(__name__)
 CORS(app)
 
 # Register blueprints
-app.register_blueprint(chat_app, url_prefix="/api/chat")
-app.register_blueprint(pdf_query_app, url_prefix="/api/pdf_query")
-app.register_blueprint(upload_pdf_app, url_prefix="/api/upload_pdf")
+app.register_blueprint(chat_app)
+app.register_blueprint(pdf_query_app)
+app.register_blueprint(upload_pdf_app)
 
 # Start the application
 if __name__ == "__main__":
