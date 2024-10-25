@@ -13,7 +13,7 @@
     }
   ],
  "env": {
-  "NEXT_PUBLIC_API_BASE_URL": "https://huggingface.co/spaces/huzaifaroman/aibot"
+  "NEXT_PUBLIC_API_BASE_URL": "https://huggingface.co/spaces/huzaifaroman/audacitymodel"
 }
 
 }
