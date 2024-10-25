@@ -13,7 +13,7 @@
     }
   ],
  "env": {
-  "NEXT_PUBLIC_API_BASE_URL": "https://api-inference.huggingface.co/models/huzaifaroman/Chatpdfgenaibot"
+  "NEXT_PUBLIC_API_BASE_URL": "https://huggingface.co/spaces/huzaifaroman/aibot"
 }
 
 }
